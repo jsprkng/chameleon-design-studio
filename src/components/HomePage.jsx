@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 
 const HomePage = ({ isDarkMode }) => {
   return (
-    <section id="home" className="min-h-screen flex flex-col items-center justify-center pt-16">
+    <section id="home" className="min-h-screen flex flex-col items-center justify-center pt-64">
       <motion.h1 
         initial={{ opacity: 0, y: 50 }}
         animate={{ opacity: 1, y: 0 }}
@@ -22,7 +22,7 @@ const HomePage = ({ isDarkMode }) => {
         initial={{ opacity: 0, y: 30 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ duration: 0.8, delay: 0.3 }}
-        className="text-[18px] max-w-[800px] text-center mt-8"
+        className="text-[18px] max-w-[800px] text-center mt-64"
         style={{ 
           fontFamily: 'owners, sans-serif',
           fontWeight: '500',
