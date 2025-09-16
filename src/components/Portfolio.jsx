@@ -1,5 +1,6 @@
-import React from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 import LazyMatcha from '../assets/LazyMatcha.png';
 import NYCheese from '../assets/NYCheese.png';
 import Ouvre from '../assets/Ouvre.png';
@@ -7,12 +8,47 @@ import Puma from '../assets/Puma.png';
 import LionOfJudah from '../assets/LionOfJudah.jpg';
 
 const Portfolio = ({ isDarkMode }) => {
+  // Categories for filtering
+  const categories = [
+    { id: 'all', name: 'All Projects' },
+    { id: 'branding', name: 'Branding' },
+    { id: 'illus', name: 'Illustrations' },
+    { id: 'publications', name: 'Publications' },
+    { id: 'proj', name: 'Projects' }
+  ];
+
+  // Filter state
+  const [filter, setFilter] = useState('all');
+  
+  // Scroll reference for navigation
+  const scrollContainerRef = useRef(null);
+
+  // Navigation functions
+  const scrollLeft = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: -400,
+        behavior: 'smooth'
+      });
+    }
+  };
+
+  const scrollRight = () => {
+    if (scrollContainerRef.current) {
+      scrollContainerRef.current.scrollBy({
+        left: 400,
+        behavior: 'smooth'
+      });
+    }
+  };
+
   // Sample portfolio projects data
   const projects = [
     {
       id: 1,
       title: "Lazy Matcha",
       category: "Brand Identity & Packaging",
+      filterCategory: "illus",
       image: LazyMatcha,
       description: "Trendy matcha brand for young professionals"
     },
@@ -20,6 +56,7 @@ const Portfolio = ({ isDarkMode }) => {
       id: 2,
       title: "NY Cheese",
       category: "Brand Strategy & Design",
+      filterCategory: "proj",
       image: NYCheese,
       description: "Fresh branding for artisanal cheese company"
     },
@@ -27,6 +64,7 @@ const Portfolio = ({ isDarkMode }) => {
       id: 3,
       title: "Ouvre",
       category: "Website & Branding",
+      filterCategory: "illus",
       image: Ouvre,
       description: "Modern brand identity for creative studio"
     },
@@ -34,6 +72,7 @@ const Portfolio = ({ isDarkMode }) => {
       id: 4,
       title: "Puma",
       category: "Brand Implementation",
+      filterCategory: "proj",
       image: Puma,
       description: "Athletic brand redesign and implementation"
     },
@@ -41,13 +80,33 @@ const Portfolio = ({ isDarkMode }) => {
       id: 5,
       title: "Lion Of Judah",
       category: "Brand Identity & Strategy",
+      filterCategory: "illus",
+      image: LionOfJudah,
+      description: "Powerful branding for spiritual organization"
+    },
+    {
+      id: 6,
+      title: "Lion Of Judah",
+      category: "Brand Identity & Strategy",
+      filterCategory: "illus",
+      image: LionOfJudah,
+      description: "Powerful branding for spiritual organization"
+    },
+    {
+      id: 7,
+      title: "Lion Of Judah",
+      category: "Brand Identity & Strategy",
+      filterCategory: "illus",
       image: LionOfJudah,
       description: "Powerful branding for spiritual organization"
     }
   ];
 
+  // Filter projects based on selected category
+  const filteredProjects = filter === 'all' ? projects : projects.filter(project => project.filterCategory === filter);
+
   return (
-    <div className="py-20">
+    <div id="portfolio" className="py-20">
       {/* Services Section */}
       <section className="max-w-7xl mx-auto px-8 mb-32">
         <motion.div
@@ -180,7 +239,7 @@ const Portfolio = ({ isDarkMode }) => {
       </section>
 
       {/* Portfolio Section with Horizontal Scroll */}
-      <section id="portfolio" className="max-w-8xl mx-auto ml-8 px-8">
+      <section className="max-w-8xl mx-auto ml-8 px-8">
         <motion.div
           initial={{ opacity: 0, y: 50 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -205,10 +264,64 @@ const Portfolio = ({ isDarkMode }) => {
           </p>
         </motion.div>
 
-        {/* Horizontal Scrollable Projects */}
-        <div className="overflow-x-auto scrollbar-hide">
-          <div className="flex space-x-6 pb-6" style={{ width: 'max-content' }}>
-            {projects.map((project, index) => (
+        {/* Filter Buttons */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.6, delay: 0.2 }}
+          className="flex flex-wrap justify-center gap-4 mb-12"
+        >
+          {categories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => setFilter(category.id)}
+              className={`px-6 py-3 rounded-full font-semibold transition-all duration-300 ${
+                filter === category.id
+                  ? 'bg-gradient-to-r from-blue-700 to-blue-900 text-white shadow-lg'
+                  : isDarkMode 
+                    ? 'bg-white/10 text-white/80 hover:bg-white/20 border border-white/20' 
+                    : 'bg-gray-100 text-gray-700 hover:bg-gray-200 border border-gray-300'
+              }`}
+              style={{ 
+                fontFamily: 'owners, sans-serif'
+              }}
+            >
+              {category.name}
+            </button>
+          ))}
+        </motion.div>
+
+        {/* Horizontal Scrollable Projects with Navigation */}
+        <div className="relative">
+          {/* Left Arrow */}
+          <button
+            onClick={scrollLeft}
+            className="absolute left-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all duration-300"
+            style={{ 
+              color: '#ffffff'
+            }}
+          >
+            <ChevronLeft size={24} />
+          </button>
+
+          {/* Right Arrow */}
+          <button
+            onClick={scrollRight}
+            className="absolute right-4 top-1/2 transform -translate-y-1/2 z-10 w-12 h-12 rounded-full bg-black/50 backdrop-blur-sm border border-white/20 flex items-center justify-center hover:bg-black/70 transition-all duration-300"
+            style={{ 
+              color: '#ffffff'
+            }}
+          >
+            <ChevronRight size={24} />
+          </button>
+
+          {/* Scrollable Container */}
+          <div 
+            ref={scrollContainerRef}
+            className="overflow-x-auto scrollbar-hide"
+          >
+            <div className="flex space-x-6 pb-6 justify-center min-w-full" style={{ width: 'max-content' }}>
+            {filteredProjects.map((project, index) => (
               <motion.div
                 key={project.id}
                 initial={{ opacity: 0, x: 50 }}
@@ -283,6 +396,7 @@ const Portfolio = ({ isDarkMode }) => {
               </motion.div>
             ))}
           </div>
+        </div>
         </div>
       </section>
     </div>
